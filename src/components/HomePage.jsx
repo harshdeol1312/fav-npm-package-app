@@ -11,7 +11,11 @@ const HomePage = () => {
   const fetchResults = async (searchQuery) => {
     try {
       const response = await axios.get(`https://api.npms.io/v2/search?q=${searchQuery}`);
-      const fetchedResults = response.data.results.map((pkg) => pkg.package.name);
+      const fetchedResults = response.data.results
+        .filter(pkg => pkg.package.name.includes(searchQuery))
+        .map(pkg => pkg.package.name);
+      console.log('Fetched results:', fetchedResults);
+
       setResults(fetchedResults);
       localStorage.setItem('results', JSON.stringify(fetchedResults));
     } catch (error) {
