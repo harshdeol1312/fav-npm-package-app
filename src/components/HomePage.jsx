@@ -7,11 +7,17 @@ const HomePage = () => {
   const [selectedResult, setSelectedResult] = useState("");
   const [reason, setReason] = useState("");
   const [query, setQuery] = useState("");
+  const [favorites, setFavorites] = useState([]);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const storedResults = localStorage.getItem('results');
+    const storedFavorites = localStorage.getItem('favorites');
     if (storedResults) {
       setResults(JSON.parse(storedResults));
+    }
+    if (storedFavorites) {
+      setFavorites(JSON.parse(storedFavorites));
     }
   }, []);
 
@@ -41,12 +47,18 @@ const HomePage = () => {
 
   const handleSaveFavorite = () => {
     if (selectedResult && reason) {
-      const newFavorite = { result: selectedResult, reason };
-      const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      const updatedFavorites = [...storedFavorites, newFavorite];
-      localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-      setSelectedResult("");
-      setReason("");
+      const isAlreadyFavorite = favorites.some(fav => fav.result === selectedResult);
+      if (!isAlreadyFavorite) {
+        const newFavorite = { result: selectedResult, reason };
+        const updatedFavorites = [...favorites, newFavorite];
+        setFavorites(updatedFavorites);
+        localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+        setSelectedResult("");
+        setReason("");
+        setMessage("");
+      } else {
+        setMessage(`${selectedResult} is already in your favorites list.`);
+      }
     }
   };
 
@@ -83,9 +95,11 @@ const HomePage = () => {
           <button
             onClick={handleSaveFavorite}
             className="mt-2 p-2 bg-blue-500 text-white"
+            disabled={message !== ""}
           >
             Save Favorite
           </button>
+          {message && <p className="text-red-500 mt-2">{message}</p>}
         </div>
       )}
     </div>
