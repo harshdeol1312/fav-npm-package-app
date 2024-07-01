@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from './ConfirmationModel';
+import axios from 'axios';
 
 const FavPage = () => {
   const [favoriteData, setFavoriteData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
+  const [viewIndex, setViewIndex] = useState(null);
   const [editedResult, setEditedResult] = useState('');
   const [editedReason, setEditedReason] = useState('');
+  const [packageDetails, setPackageDetails] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,6 +29,19 @@ const FavPage = () => {
     setEditedResult(result);
     setEditedReason(reason);
   };
+
+  const handleView = async (index, result) => {
+    setViewIndex(index);
+    try {
+      const response = await axios.get(`https://api.npms.io/v2/package/${result}`);
+      console.log('Package details:', response.data.collected);
+      setPackageDetails(response.data.collected.metadata);
+    } catch (error) {
+      console.error('Error fetching package details:', error);
+    }
+  };
+
+
 
   const confirmDelete = () => {
     const updatedFavorites = favoriteData.filter((_, index) => index !== deleteIndex);
@@ -48,12 +64,16 @@ const FavPage = () => {
     setEditIndex(null);
     setEditedResult('');
     setEditedReason('');
+    setViewIndex(null);
+    setPackageDetails(null);
   };
 
   const cancelEdit = () => {
     setEditIndex(null);
     setEditedResult('');
     setEditedReason('');
+    setViewIndex(null);
+    setPackageDetails(null);
   };
 
   const handleAddFav = () => {
@@ -103,6 +123,12 @@ const FavPage = () => {
                   </div>
                   <div>
                     <button
+                      onClick={() => handleView(index, item.result)}
+                      className="mr-2 p-2 bg-green-500 text-white"
+                    >
+                      View
+                    </button>
+                    <button
                       onClick={() => handleEdit(index, item.result, item.reason)}
                       className="mr-2 p-2 bg-yellow-500 text-white"
                     >
@@ -115,6 +141,25 @@ const FavPage = () => {
                       Remove
                     </button>
                   </div>
+                </div>
+              )}
+              {viewIndex === index && packageDetails && (
+                <div className="mt-4">
+                  <h3 className="text-lg font-bold">{packageDetails.name}</h3>
+                  <p>{packageDetails.description}</p>
+                  <p>Version: {packageDetails.version}</p>
+                  <p>Dependencies:</p>
+                  <ul>
+                    {Object.keys(packageDetails.dependencies || {}).map((dep) => (
+                      <li key={dep}>{dep}</li>
+                    ))}
+                  </ul>
+                  <button
+                    onClick={cancelEdit}
+                    className="mt-2 p-2 bg-gray-500 text-white"
+                  >
+                    Close
+                  </button>
                 </div>
               )}
             </div>
