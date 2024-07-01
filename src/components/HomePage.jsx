@@ -9,6 +9,7 @@ const HomePage = () => {
   const [query, setQuery] = useState("");
   const [favorites, setFavorites] = useState([]);
   const [message, setMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const storedResults = localStorage.getItem('results');
@@ -56,6 +57,10 @@ const HomePage = () => {
         setSelectedResult("");
         setReason("");
         setMessage("");
+        setSuccessMessage(`${selectedResult} has been added to your favorites!`);
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 3000);
       } else {
         setMessage(`${selectedResult} is already in your favorites list.`);
       }
@@ -100,6 +105,11 @@ const HomePage = () => {
             Save Favorite
           </button>
           {message && <p className="text-red-500 mt-2">{message}</p>}
+        </div>
+      )}
+      {successMessage && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white p-4 rounded shadow">
+          {successMessage}
         </div>
       )}
     </div>

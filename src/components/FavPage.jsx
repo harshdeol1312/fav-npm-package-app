@@ -6,6 +6,9 @@ const FavPage = () => {
   const [favoriteData, setFavoriteData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState(null);
+  const [editIndex, setEditIndex] = useState(null);
+  const [editedResult, setEditedResult] = useState('');
+  const [editedReason, setEditedReason] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,6 +19,12 @@ const FavPage = () => {
   const handleDelete = (index) => {
     setShowModal(true);
     setDeleteIndex(index);
+  };
+
+  const handleEdit = (index, result, reason) => {
+    setEditIndex(index);
+    setEditedResult(result);
+    setEditedReason(reason);
   };
 
   const confirmDelete = () => {
@@ -31,6 +40,22 @@ const FavPage = () => {
     setDeleteIndex(null);
   };
 
+  const saveEdit = () => {
+    const updatedFavorites = [...favoriteData];
+    updatedFavorites[editIndex] = { result: editedResult, reason: editedReason };
+    setFavoriteData(updatedFavorites);
+    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    setEditIndex(null);
+    setEditedResult('');
+    setEditedReason('');
+  };
+
+  const cancelEdit = () => {
+    setEditIndex(null);
+    setEditedResult('');
+    setEditedReason('');
+  };
+
   const handleAddFav = () => {
     navigate('/');
   };
@@ -41,15 +66,57 @@ const FavPage = () => {
       {favoriteData.length > 0 ? (
         <div>
           {favoriteData.map((item, index) => (
-            <div key={index} className="mb-4">
-              <p className="font-bold">{item.result}</p>
-              <p>{item.reason}</p>
-              <button
-                onClick={() => handleDelete(index)}
-                className="mt-2 p-2 bg-red-500 text-white"
-              >
-                Remove
-              </button>
+            <div key={index} className="mb-4 border p-4">
+              {editIndex === index ? (
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    value={editedResult}
+                    onChange={(e) => setEditedResult(e.target.value)}
+                    className="border p-2 flex-grow mr-2"
+                  />
+                  <textarea
+                    value={editedReason}
+                    onChange={(e) => setEditedReason(e.target.value)}
+                    className="border p-2 flex-grow mr-2"
+                  />
+                  <div>
+                    <button
+                      onClick={saveEdit}
+                      className="mr-2 p-2 bg-blue-500 text-white"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={cancelEdit}
+                      className="p-2 bg-gray-500 text-white"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-bold">{item.result}</p>
+                    <p>{item.reason}</p>
+                  </div>
+                  <div>
+                    <button
+                      onClick={() => handleEdit(index, item.result, item.reason)}
+                      className="mr-2 p-2 bg-yellow-500 text-white"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(index)}
+                      className="p-2 bg-red-500 text-white"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
