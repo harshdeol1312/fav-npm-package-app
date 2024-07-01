@@ -8,7 +8,15 @@ const HomePage = () => {
   const [reason, setReason] = useState("");
   const [query, setQuery] = useState("");
 
-  const fetchResults = async (searchQuery) => {
+  useEffect(() => {
+    const storedResults = localStorage.getItem('results');
+    if (storedResults) {
+      setResults(JSON.parse(storedResults));
+    }
+  }, []);
+
+  const handleSearch = async (searchQuery) => {
+    setQuery(searchQuery);
     try {
       const response = await axios.get(`https://api.npms.io/v2/search?q=${searchQuery}`);
       const fetchedResults = response.data.results
@@ -20,25 +28,7 @@ const HomePage = () => {
       localStorage.setItem('results', JSON.stringify(fetchedResults));
     } catch (error) {
       console.error('Error fetching data:', error);
-      const storedResults = localStorage.getItem('results');
-      if (storedResults) {
-        setResults(JSON.parse(storedResults));
-      }
     }
-  };
-
-  useEffect(() => {
-    const storedResults = localStorage.getItem('results');
-    if (storedResults) {
-      setResults(JSON.parse(storedResults));
-    } else {
-      fetchResults(query);
-    }
-  }, []);
-
-  const handleSearch = (query) => {
-    setQuery(query);
-    fetchResults(query);
   };
 
   const handleResultSelect = (event) => {
