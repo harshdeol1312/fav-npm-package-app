@@ -12,6 +12,7 @@ const FavPage = () => {
   const [editedResult, setEditedResult] = useState('');
   const [editedReason, setEditedReason] = useState('');
   const [packageDetails, setPackageDetails] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,16 +33,17 @@ const FavPage = () => {
 
   const handleView = async (index, result) => {
     setViewIndex(index);
+    setPackageDetails(null);
+    setErrorMessage('');
     try {
       const response = await axios.get(`https://api.npms.io/v2/package/${result}`);
       console.log('Package details:', response.data.collected);
       setPackageDetails(response.data.collected.metadata);
     } catch (error) {
       console.error('Error fetching package details:', error);
+      setErrorMessage('No additional details to display.');
     }
   };
-
-
 
   const confirmDelete = () => {
     const updatedFavorites = favoriteData.filter((_, index) => index !== deleteIndex);
@@ -66,6 +68,7 @@ const FavPage = () => {
     setEditedReason('');
     setViewIndex(null);
     setPackageDetails(null);
+    setErrorMessage('');
   };
 
   const cancelEdit = () => {
@@ -74,6 +77,7 @@ const FavPage = () => {
     setEditedReason('');
     setViewIndex(null);
     setPackageDetails(null);
+    setErrorMessage('');
   };
 
   const handleAddFav = () => {
@@ -161,6 +165,9 @@ const FavPage = () => {
                     Close
                   </button>
                 </div>
+              )}
+              {viewIndex === index && errorMessage && (
+                <div className="mt-4 text-red-500">{errorMessage}</div>
               )}
             </div>
           ))}
