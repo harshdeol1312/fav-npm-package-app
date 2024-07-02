@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from './ConfirmationModel';
 import axios from 'axios';
 
@@ -86,7 +88,14 @@ const FavPage = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">My Favorites</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">My Favorites</h1>
+        <button
+          onClick={handleAddFav}
+          className="p-2 bg-blue-500 text-white rounded-md">
+          Add Fav
+        </button>
+      </div>
       {favoriteData.length > 0 ? (
         <div>
           {favoriteData.map((item, index) => (
@@ -107,13 +116,13 @@ const FavPage = () => {
                   <div>
                     <button
                       onClick={saveEdit}
-                      className="mr-2 p-2 bg-blue-500 text-white"
+                      className="mr-2 p-2 bg-green-500 text-white rounded-md"
                     >
                       Save
                     </button>
                     <button
                       onClick={cancelEdit}
-                      className="p-2 bg-gray-500 text-white"
+                      className="p-2 bg-red-500 text-white rounded-md"
                     >
                       Cancel
                     </button>
@@ -123,26 +132,25 @@ const FavPage = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-bold">{item.result}</p>
-                    <p>{item.reason}</p>
                   </div>
                   <div>
                     <button
                       onClick={() => handleView(index, item.result)}
-                      className="mr-2 p-2 bg-green-500 text-white"
+                      className="mr-2 p-2 rounded-md"
                     >
-                      View
+                      <FontAwesomeIcon icon={faEye} />
                     </button>
                     <button
                       onClick={() => handleEdit(index, item.result, item.reason)}
-                      className="mr-2 p-2 bg-yellow-500 text-white"
+                      className="mr-2 p-2 rounded-md"
                     >
-                      Edit
+                      <FontAwesomeIcon icon={faPen} />
                     </button>
                     <button
                       onClick={() => handleDelete(index)}
-                      className="p-2 bg-red-500 text-white"
+                      className="p-2 rounded-md"
                     >
-                      Remove
+                      <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </div>
                 </div>
@@ -150,6 +158,7 @@ const FavPage = () => {
               {viewIndex === index && packageDetails && (
                 <div className="mt-4">
                   <h3 className="text-lg font-bold">{packageDetails.name}</h3>
+                  <p>Reason: {item.reason}</p>
                   <p>{packageDetails.description}</p>
                   <p>Version: {packageDetails.version}</p>
                   <p>Dependencies:</p>
@@ -160,7 +169,7 @@ const FavPage = () => {
                   </ul>
                   <button
                     onClick={cancelEdit}
-                    className="mt-2 p-2 bg-gray-500 text-white"
+                    className="mt-2 p-2 bg-gray-500 text-white rounded-md"
                   >
                     Close
                   </button>
@@ -178,7 +187,7 @@ const FavPage = () => {
           <div>
             <button
               onClick={handleAddFav}
-              className="mt-4 p-2 bg-blue-500 text-white"
+              className="mt-4 p-2 bg-blue-500 text-white rounded-md"
             >
               Add Fav
             </button>

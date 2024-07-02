@@ -8,7 +8,7 @@ const ConfirmationModal = ({ confirmDelete, cancelDelete }) => {
         <div className="flex justify-end mt-4">
           <button
             onClick={cancelDelete}
-            className="mr-2 p-2 bg-gray-500 text-white rounded"
+            className="mr-2 p-2 bg-green-500 text-white rounded"
           >
             Cancel
           </button>
