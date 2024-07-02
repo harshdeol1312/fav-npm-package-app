@@ -69,7 +69,7 @@ const HomePage = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">My Search App</h1>
+      <h1 className="text-2xl font-bold mb-4">Search for NPM Package</h1>
       <SearchBar onSearch={handleSearch} />
       <div className="mt-4 border p-4 w-full max-w-md h-48 overflow-y-auto">
         {results.map((result, index) => (
