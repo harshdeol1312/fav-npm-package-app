@@ -20,7 +20,7 @@ const SearchBar = ({ onResults, apiUrl }) => {
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    }, 800);
+    }, 400);
   };
 
   const handleInputChange = (event) => {

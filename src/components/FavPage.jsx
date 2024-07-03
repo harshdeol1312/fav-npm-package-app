@@ -19,7 +19,6 @@ const FavPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
     const storedFavorites = getFav() || [];
     setFavoriteData(storedFavorites);
   }, []);
@@ -52,7 +51,6 @@ const FavPage = () => {
   const confirmDelete = () => {
     const updatedFavorites = favoriteData.filter((_, index) => index !== deleteIndex);
     setFavoriteData(updatedFavorites);
-    // localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
     setFav(updatedFavorites);
     setShowModal(false);
     setDeleteIndex(null);
@@ -67,7 +65,6 @@ const FavPage = () => {
     const updatedFavorites = [...favoriteData];
     updatedFavorites[editIndex] = { result: editedResult, reason: editedReason };
     setFavoriteData(updatedFavorites);
-    // localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
     setFav(updatedFavorites);
     setEditIndex(null);
     setEditedResult('');

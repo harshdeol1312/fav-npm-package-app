@@ -12,7 +12,6 @@ const HomePage = () => {
   const apiUrl = 'https://api.npms.io/v2/search';
 
   useEffect(() => {
-    // const storedFavorites = localStorage.getItem('favorites');
     const storedFavorites = getFav();
     if (storedFavorites) {
       setFavorites(storedFavorites);
@@ -34,7 +33,6 @@ const HomePage = () => {
         const newFavorite = { result: selectedResult, reason };
         const updatedFavorites = [...favorites, newFavorite];
         setFavorites(updatedFavorites);
-        // localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
         setFav(updatedFavorites);
         setSelectedResult("");
         setReason("");
