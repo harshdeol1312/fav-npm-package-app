@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faPen, faTrash } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationModal from './ConfirmationModel';
+import { setFav, getFav } from '../Handeler/StorageHandeler';
 import axios from 'axios';
 
 const FavPage = () => {
@@ -18,7 +19,8 @@ const FavPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    // const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const storedFavorites = getFav() || [];
     setFavoriteData(storedFavorites);
   }, []);
 
@@ -50,7 +52,8 @@ const FavPage = () => {
   const confirmDelete = () => {
     const updatedFavorites = favoriteData.filter((_, index) => index !== deleteIndex);
     setFavoriteData(updatedFavorites);
-    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    // localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    setFav(updatedFavorites);
     setShowModal(false);
     setDeleteIndex(null);
   };
@@ -64,7 +67,8 @@ const FavPage = () => {
     const updatedFavorites = [...favoriteData];
     updatedFavorites[editIndex] = { result: editedResult, reason: editedReason };
     setFavoriteData(updatedFavorites);
-    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    // localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    setFav(updatedFavorites);
     setEditIndex(null);
     setEditedResult('');
     setEditedReason('');
